@@ -14,6 +14,37 @@
   }
 {%- endstyle -%}
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Hide the original image
+  $('.image-with-text__media img').hide();
+
+  // Make AJAX request to Unsplash API
+  $.ajax({
+    url: 'https://api.unsplash.com/photos/random',
+    headers: {
+      Authorization: 'Client-ID TdgvO5Uocgw_E5Y1Z2wXOOIE-8Uy3sWZJgaWVHcL53A' // Replace with your Unsplash Access Key
+    },
+    success: function(data) {
+      var imageUrl = data.urls.regular; // Extract image URL from API response
+
+      // Replace the original image src and srcset with Unsplash image and apply fade-in effect
+      $('.image-with-text__media img').attr({
+        'src': imageUrl,
+        'srcset': '' // Clear srcset attribute
+      }).on('load', function() {
+        $(this).fadeIn(400);
+      });
+    },
+    error: function(xhr, status, error) {
+      console.error('Error fetching image:', error);
+    }
+  });
+});
+</script>
+
+
 <div class="image-with-text image-with-text--{{ section.settings.content_layout }} page-width isolate{% if settings.text_boxes_border_thickness > 0 and settings.text_boxes_border_opacity > 0 and settings.media_border_thickness > 0 and settings.media_border_opacity > 0 %} collapse-borders{% endif %}{% unless section.settings.color_scheme == 'background-1' and settings.media_border_thickness > 0 and settings.text_boxes_shadow_opacity == 0 and settings.text_boxes_border_thickness == 0 or settings.text_boxes_border_opacity == 0 %} collapse-corners{% endunless %} section-{{ section.id }}-padding">
   <div class="image-with-text__grid grid grid--gapless grid--1-col grid--{% if section.settings.desktop_image_width == 'medium' %}2-col-tablet{% else %}3-col-tablet{% endif %}{% if section.settings.layout == 'text_first' %} image-with-text__grid--reverse{% endif %}">
     <div class="image-with-text__media-item image-with-text__media-item--{{ section.settings.desktop_image_width }} image-with-text__media-item--{{ section.settings.desktop_content_position }} grid__item">
@@ -56,6 +87,7 @@
     </div>
   </div>
 </div>
+
 
 {% schema %}
 {
